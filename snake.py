@@ -8,9 +8,14 @@ def initGrid(width,height):
     global grid
     grid = [["" for i in range(width)] for a in range(height)]
 
-####TODO: Emtpy tile check for apple spawn####
+####Emtpy tile check for apple spawn####
 def checkEmptyTiles():
-    return
+    emptytiles=[]
+    for a in range(len(grid)):
+        for b in range(len(grid[0])):
+            if grid[a][b]==" ":
+                emptytiles.append((a,b))
+    return emptytiles
 
 ####Draw the character tiles####
 def drawCharacters():
@@ -110,3 +115,5 @@ drawGrid()
 player1.move("down",False)
 drawCharacters()
 drawGrid()
+##
+print(checkEmptyTiles())
