@@ -47,8 +47,8 @@ class apple():
 
 ####Player class initialization####
 class player():
-    def __init__(self):
-        self.position = [(1,1)]
+    def __init__(self,initialposition):
+        self.position = [initialposition]
         self.lenght = len(self.position)
         self.tailPosition = self.position[-1]
 
@@ -60,16 +60,32 @@ class player():
         if willgrow:
             self.position += [self.tailPosition]
             self.updatePosition()
-        for i in range(self.lenght-willgrow):
-            if direction =="right":
-                tmpx = self.position[i][0]
-                tmpy = self.position[i][1]
-                self.position.pop(i)
-                self.position.insert(i,(tmpx,tmpy+1))
+        self.position = [self.position[0]] + self.position
+        self.position.pop(-1)
+        if direction =="right":
+            tmpx = self.position[0][0]
+            tmpy = self.position[0][1]
+            self.position.pop(0)
+            self.position.insert(0,(tmpx,tmpy+1))
+        elif direction =="left":
+            tmpx = self.position[0][0]
+            tmpy = self.position[0][1]
+            self.position.pop(0)
+            self.position.insert(0,(tmpx,tmpy-1))
+        elif direction =="up":
+            tmpx = self.position[0][0]
+            tmpy = self.position[0][1]
+            self.position.pop(0)
+            self.position.insert(0,(tmpx-1,tmpy))
+        elif direction =="down":
+            tmpx = self.position[0][0]
+            tmpy = self.position[0][1]
+            self.position.pop(0)
+            self.position.insert(0,(tmpx+1,tmpy))
         self.updatePosition()
 
 ####Tests####
-player1 = player()
+player1 = player((1,1))
 initGrid(8,5)
 drawCharacters()
 drawGrid()
@@ -84,5 +100,13 @@ drawCharacters()
 drawGrid()
 ##
 player1.move("right",True)
+drawCharacters()
+drawGrid()
+##
+player1.move("down",True)
+drawCharacters()
+drawGrid()
+##
+player1.move("down",False)
 drawCharacters()
 drawGrid()
