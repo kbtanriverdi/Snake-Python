@@ -1,12 +1,13 @@
 ####Libraries####
 #import numpy as np
+import random as rd
 
 ####Define and initialize grid####
 grid=[]
 
 def initGrid(width,height):
     global grid
-    grid = [["" for i in range(width)] for a in range(height)]
+    grid = [[" " for i in range(width)] for a in range(height)]
 
 ####Emtpy tile check for apple spawn####
 def checkEmptyTiles():
@@ -27,6 +28,8 @@ def drawCharacters():
                     grid[a][b] = "H"
                 else:
                     grid[a][b] = "B"
+            elif (a,b)==apple1.position[0]:
+                grid[a][b] = "A"
             else:
                 grid[a][b] = " "
 
@@ -44,11 +47,13 @@ def drawGrid():
                 case = case+str(grid[i][a])+"  |  "
     print(case)
 
-####TODO: Apple class####
+####Apple class####
 class apple():
     def __init__(self):
-        #self.position =
-        return
+        self.position = [(-1,-1)]
+    def move(self):
+        checkEmptyTiles()
+        self.position[0] = checkEmptyTiles()[rd.randint(0,len(checkEmptyTiles()))]
 
 ####Player class initialization####
 class player():
@@ -61,8 +66,8 @@ class player():
         self.tailPosition = self.position[-1]
         self.lenght = len(self.position)
 
-    def move(self,direction,willgrow):
-        if willgrow:
+    def move(self,direction):
+        if self.checkApple(direction):
             self.position += [self.tailPosition]
             self.updatePosition()
         self.position = [self.position[0]] + self.position
@@ -89,31 +94,35 @@ class player():
             self.position.insert(0,(tmpx+1,tmpy))
         self.updatePosition()
 
+    def checkApple(self,direction):
+        if direction =="right":
+            if (self.position[0][0],self.position[0][1]+1)==apple1.position[0]:
+                apple1.move()
+                return True
+        elif direction =="left":
+            if (self.position[0][0],self.position[0][1]-1)==apple1.position[0]:
+                apple1.move()
+                return True
+        elif direction =="up":
+            if (self.position[0][0]-1,self.position[0][1])==apple1.position[0]:
+                apple1.move()
+                return True
+        elif direction =="down":
+            if (self.position[0][0]+1,self.position[0][1])==apple1.position[0]:
+                apple1.move()
+                return True
+
 ####Tests####
 player1 = player((1,1))
+apple1 = apple()
 initGrid(8,5)
+apple1.move()
 drawCharacters()
 drawGrid()
 ##
-#player1.grow()
-player1.move("right",True)
-drawCharacters()
-drawGrid()
-##
-player1.move("right",False)
-drawCharacters()
-drawGrid()
-##
-player1.move("right",True)
-drawCharacters()
-drawGrid()
-##
-player1.move("down",True)
-drawCharacters()
-drawGrid()
-##
-player1.move("down",False)
-drawCharacters()
-drawGrid()
-##
-print(checkEmptyTiles())
+####TODO: Game tick and keyboard inputs####
+while True:
+    direction = input("\n"*(len(grid)*3)+": ")
+    player1.move(direction)
+    drawCharacters()
+    drawGrid()
