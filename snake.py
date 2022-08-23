@@ -1,6 +1,7 @@
 ####Libraries####
 #import numpy as np
 import random as rd
+import keyboard as kb
 
 ####Define and initialize grid####
 grid=[]
@@ -17,6 +18,10 @@ def checkEmptyTiles():
             if grid[a][b]==" ":
                 emptytiles.append((a,b))
     return emptytiles
+
+####TODO: Check possibleMoves####
+def checkPossibleMoves():
+    return
 
 ####Draw the character tiles####
 def drawCharacters():
@@ -53,7 +58,7 @@ class apple():
         self.position = [(-1,-1)]
     def move(self):
         checkEmptyTiles()
-        self.position[0] = checkEmptyTiles()[rd.randint(0,len(checkEmptyTiles()))]
+        self.position[0] = checkEmptyTiles()[rd.randint(0,len(checkEmptyTiles())-1)]
 
 ####Player class initialization####
 class player():
@@ -61,6 +66,7 @@ class player():
         self.position = [initialposition]
         self.lenght = len(self.position)
         self.tailPosition = self.position[-1]
+        self.lastdirection = "right"
 
     def updatePosition(self):
         self.tailPosition = self.position[-1]
@@ -72,26 +78,33 @@ class player():
             self.updatePosition()
         self.position = [self.position[0]] + self.position
         self.position.pop(-1)
-        if direction =="right":
+        if direction == "0":
+            self.move(self.lastdirection)
+            return
+        elif direction =="right":
             tmpx = self.position[0][0]
             tmpy = self.position[0][1]
             self.position.pop(0)
             self.position.insert(0,(tmpx,tmpy+1))
+            self.lastdirection = "right"
         elif direction =="left":
             tmpx = self.position[0][0]
             tmpy = self.position[0][1]
             self.position.pop(0)
             self.position.insert(0,(tmpx,tmpy-1))
+            self.lastdirection = "left"
         elif direction =="up":
             tmpx = self.position[0][0]
             tmpy = self.position[0][1]
             self.position.pop(0)
             self.position.insert(0,(tmpx-1,tmpy))
+            self.lastdirection = "up"
         elif direction =="down":
             tmpx = self.position[0][0]
             tmpy = self.position[0][1]
             self.position.pop(0)
             self.position.insert(0,(tmpx+1,tmpy))
+            self.lastdirection = "down"
         self.updatePosition()
 
     def checkApple(self,direction):
@@ -124,5 +137,6 @@ drawGrid()
 while True:
     direction = input("\n"*(len(grid)*3)+": ")
     player1.move(direction)
+    #print(kb.read_key())
     drawCharacters()
     drawGrid()
