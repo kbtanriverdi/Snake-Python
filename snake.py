@@ -2,6 +2,9 @@
 #import numpy as np
 import random as rd
 import keyboard as kb
+import time
+
+tick = 0.1
 
 ####Define and initialize grid####
 grid=[]
@@ -133,10 +136,14 @@ apple1.move()
 drawCharacters()
 drawGrid()
 ##
-####TODO: Game tick and keyboard inputs####
-while True:
+####TODO:Keyboard inputs####
+def gameTick():
     direction = input("\n"*(len(grid)*3)+": ")
     player1.move(direction)
     #print(kb.read_key())
     drawCharacters()
     drawGrid()
+
+while True:
+    time.sleep(tick)
+    gameTick()
